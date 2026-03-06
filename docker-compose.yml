@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ../ghibli-backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - GHIBLI_API_URL=${GHIBLI_API_URL}
+    networks:
+      - ghibli-network
+
+  frontend:
+    build:
+      context: ../ghibli-frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ghibli-network
+
+networks:
+  ghibli-network:
+    driver: bridge
